@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    FILE *f;
+    int op;
+    char nome[50];
+    char codigo[20];
+    char local[50];
+    char linha[100];
+
+    do {
+        printf("\n--- MENU DO LABORATORIO ---\n");
+        printf("1. Cadastrar equipamento\n");
+        printf("2. Listar equipamentos\n");
+        printf("3. Sair\n");
+        printf("Escolha uma opcao: ");
+        scanf("%d", &op);
+        getchar(); // Limpa o enter que fica preso no buffer
+
+        if (op == 1) {
+            // Abre o arquivo no modo 'a' para nao apagar o que ja tem gravado
+            f = fopen("equipamentos.txt", "a");
+            
+            if (f == NULL) {
+                printf("Erro ao abrir o arquivo!\n");
+            } else {
+                printf("\nDigite o nome do equipamento: ");
+                fgets(nome, 50, stdin);
+                nome[strcspn(nome, "\n")] = 0; // Tira o \n do final
+
+                printf("Digite o codigo: ");
+                fgets(codigo, 20, stdin);
+                codigo[strcspn(codigo, "\n")] = 0;
+
+                printf("Digite a localizacao: ");
+                fgets(local, 50, stdin);
+                local[strcspn(local, "\n")] = 0;
+
+                // Salvando no arquivo texto
+                fprintf(f, "Nome: %s | Codigo: %s | Local: %s\n", nome, codigo, local);
+                fclose(f);
+                
+                printf("Cadastrado com sucesso!\n");
+            }
+        } 
+        else if (op == 2) {
+            // Abre o arquivo para leitura
+            f = fopen("equipamentos.txt", "r");
+            
+            if (f == NULL) {
+                printf("\nAinda nao ha equipamentos cadastrados.\n");
+            } else {
+                printf("\n--- LISTA DE EQUIPAMENTOS ---\n");
+                // Le linha por linha ate o fim do arquivo
+                while (fgets(linha, sizeof(linha), f) != NULL) {
+                    printf("%s", linha);
+                }
+                fclose(f);
+            }
+        } 
+        else if (op == 3) {
+            printf("\nSaindo do programa...\n");
+        } 
+        else {
+            printf("\nOpcao invalida, tente de novo.\n");
+        }
+
+    } while (op != 3);
+
+    return 0;
+}
